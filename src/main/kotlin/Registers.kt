@@ -33,11 +33,11 @@ class Registers {
         return value
     }
 
-    fun assertStackUnderflow() {
+    private fun assertStackUnderflow() {
         assert(sp >= -1) { "Error stack underflow" }
     }
 
-    fun assertStackOverflow() {
+    private fun assertStackOverflow() {
         assert(sp < STACK_DEPTH) { "Error stack overflow" }
     }
 }

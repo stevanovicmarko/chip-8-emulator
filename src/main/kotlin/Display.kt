@@ -1,14 +1,15 @@
+import javafx.scene.canvas.Canvas
+import javafx.scene.paint.Color
+
 const val DISPLAY_WIDTH = 64
 const val DISPLAY_HEIGHT = 32
 
 class Display(
-    width: Int,
-    height: Int,
+    private val canvas: Canvas,
     scale: Int = 5
-)
-{
-    private val frameBuffer: Array<Array<Double>> = Array(width) {
-        Array(height) { 0.0 }
+) {
+    private val frameBuffer: Array<Array<Double>> = Array(canvas.width.toInt()) {
+        Array(canvas.height.toInt()) { 0.0 }
     }
 
     init {
@@ -19,7 +20,16 @@ class Display(
         }
     }
 
-    fun getPixel(x: Int, y: Int): Double {
+    fun drawBuffer() {
+        for (x in 0 until canvas.width.toInt()) {
+            for (y in 0 until canvas.height.toInt()) {
+                val color = if (getPixel(x, y) > 0.0) Color.GREEN else Color.BLACK
+                canvas.graphicsContext2D.pixelWriter.setColor(x, y, color)
+            }
+        }
+    }
+
+    private fun getPixel(x: Int, y: Int): Double {
         return frameBuffer[x][y]
     }
 
