@@ -5,17 +5,21 @@ import javafx.scene.layout.StackPane
 import javafx.stage.Stage
 
 
-class FxApp: Application() {
+class Chip8App: Application() {
     override fun start(stage: Stage) {
         val canvas = Canvas(600.0, 400.0)
         val chip8 = Chip8(canvas)
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         chip8.display.drawBuffer()
+        for (i in 0..4) {
+            println(chip8.memory.getMemory(i).toString(16))
+        }
+
         stage.show()
     }
 }
 
 fun main() {
-    Application.launch(FxApp::class.java)
+    Application.launch(Chip8App::class.java)
 }
