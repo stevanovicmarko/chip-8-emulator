@@ -12,9 +12,10 @@ class Chip8App: Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         chip8.display.drawBuffer()
-        for (i in 0..4) {
-            println(chip8.memory.getMemory(i).toString(16))
-        }
+        chip8.display.drawSprite(10, 1, 0, 5)
+        chip8.display.drawSprite(10, 6, 5, 5)
+        chip8.display.drawSprite(10, 11, 10, 5)
+        chip8.display.drawSprite(10, 16, 15, 5)
 
         stage.show()
     }

@@ -84,14 +84,13 @@ val CHAR_SET: Array<UByte> = arrayOf(
 )
 
 class Chip8(canvas: Canvas) {
-    val display = Display(canvas)
+    private val memory = Memory()
+    val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
-    val memory = Memory()
     val registers = Registers()
 
 
     init {
-        canvas.isFocusTraversable = true
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
     }
 }
