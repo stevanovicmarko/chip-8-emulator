@@ -11,12 +11,11 @@ class Chip8App: Application() {
         val chip8 = Chip8(canvas)
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
-        chip8.display.drawBuffer()
+        chip8.display.clearBuffer()
         chip8.display.drawSprite(10, 1, 0, 5)
-        chip8.display.drawSprite(10, 6, 5, 5)
-        chip8.display.drawSprite(10, 11, 10, 5)
-        chip8.display.drawSprite(10, 16, 15, 5)
-
+        chip8.display.drawSprite(10, 10, 5, 5)
+        chip8.display.drawSprite(10, 19, 10, 5)
+        chip8.display.drawSprite(10, 28, 15, 5)
         stage.show()
     }
 }

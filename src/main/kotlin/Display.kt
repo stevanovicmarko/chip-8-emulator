@@ -23,10 +23,10 @@ class Display(
         }
     }
 
-    fun drawBuffer() {
+    fun clearBuffer() {
         for (x in 0 until canvas.width.toInt()) {
             for (y in 0 until canvas.height.toInt()) {
-                val color = if (getPixel(x, y) > 0.0) Color.GREEN else Color.BLACK
+                val color = if (getPixel(x, y) > 0.0) Color.BLACK else Color.BISQUE
                 canvas.graphicsContext2D.pixelWriter.setColor(x, y, color)
             }
         }
@@ -37,11 +37,9 @@ class Display(
     }
 
     private fun drawPixel(x: Int, y: Int, color: Color) {
-        for (i in x until x + scale) {
-            for (j in y until y + scale) {
-                canvas.graphicsContext2D.pixelWriter.setColor(i, j, color)
-            }
-        }
+        canvas.graphicsContext2D.fill = color
+        val pixelSize = scale.toDouble()
+        canvas.graphicsContext2D.fillRect(x.toDouble(), y.toDouble(), pixelSize, pixelSize)
     }
 
 //    fun reset() {
