@@ -88,6 +88,7 @@ class Chip8(canvas: Canvas) {
     private val memory = Memory()
     val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
+    val disassembler = Disassembler()
     val registers = Registers()
     val soundCard = SoundCard()
 
