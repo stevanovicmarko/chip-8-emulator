@@ -1,4 +1,5 @@
 import javafx.scene.canvas.Canvas
+import kotlinx.coroutines.delay
 
 val CHAR_SET: Array<UByte> = arrayOf(
     0xF0u,
@@ -88,9 +89,13 @@ class Chip8(canvas: Canvas) {
     val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
     val registers = Registers()
-
+    val soundCard = SoundCard()
 
     init {
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
+    }
+
+    suspend fun sleep(sleepDuration: Long = TIMER_60_HZ.toLong()) {
+        delay(sleepDuration)
     }
 }
