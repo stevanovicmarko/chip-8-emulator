@@ -50,6 +50,12 @@ class Disassembler {
                 MASK_X,
                 MASK_KK
             )
+        ),
+        Instruction(
+            10, "ADD_VX_KK", "ADD", 0xF000, 0x7000, listOf(
+                MASK_X,
+                MASK_KK
+            )
         )
     )
 

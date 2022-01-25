@@ -3,15 +3,13 @@ import javafx.scene.Scene
 import javafx.scene.canvas.Canvas
 import javafx.scene.layout.StackPane
 import javafx.stage.Stage
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
 class Chip8App : Application() {
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun start(stage: Stage) {
         val canvas = Canvas(600.0, 400.0)
         val chip8 = Chip8(canvas)
@@ -28,9 +26,9 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.disassembler.disassemble(0x6a09)
+        chip8.disassembler.disassemble(0x710F)
 
-        GlobalScope.launch(Dispatchers.Main) {
+        CoroutineScope(Dispatchers.Main).launch {
             while (true) {
                 chip8.sleep(200)
                 if (chip8.registers.delayTimer > 0) {
@@ -43,8 +41,8 @@ class Chip8App : Application() {
                 }
                 if (chip8.registers.soundTimer == 0.toByte()) {
                     chip8.soundCard.soundEnabled = false
+                    println("Done and done")
                 }
-
             }
         }
 
