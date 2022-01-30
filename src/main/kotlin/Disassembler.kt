@@ -64,6 +64,54 @@ class Disassembler {
                 MASK_X,
                 MASK_Y
             )
+        ),
+        Instruction(
+            12, "OR_VX_VY", "OR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8001, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            13, "AND_VX_VY", "AND", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8002, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            14, "XOR_VX_VY", "XOR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8003, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            15, "ADD_VX_VY", "ADD", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8004, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            16, "SUB_VX_VY", "SUB", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8005, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            17, "SHR_VX_VY", "SHR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8006, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            18, "SUBN_VX_VY", "SUBN", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8007, listOf(
+                MASK_X,
+                MASK_Y
+            )
+        ),
+        Instruction(
+            19, "SHL_VX_VY", "SHL", MASK_HIGHEST_AND_LOWEST_BYTE, 0x800E, listOf(
+                MASK_X,
+                MASK_Y
+            )
         )
     )
 
