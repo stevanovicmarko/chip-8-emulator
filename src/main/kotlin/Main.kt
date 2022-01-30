@@ -26,7 +26,7 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.disassembler.disassemble(0x710F)
+        chip8.disassembler.disassemble(0x8120)
 
         CoroutineScope(Dispatchers.Main).launch {
             while (true) {
