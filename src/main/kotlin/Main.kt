@@ -26,7 +26,16 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.disassembler.disassemble(0x8120)
+        chip8.disassembler.disassemble(0xF107)
+        chip8.disassembler.disassemble(0xF10A)
+        chip8.disassembler.disassemble(0xF115)
+        chip8.disassembler.disassemble(0xF118)
+        chip8.disassembler.disassemble(0xF11E)
+        chip8.disassembler.disassemble(0xF129)
+        chip8.disassembler.disassemble(0xF133)
+        chip8.disassembler.disassemble(0xF155)
+        chip8.disassembler.disassemble(0xF165)
+
 
         CoroutineScope(Dispatchers.Main).launch {
             while (true) {
@@ -41,7 +50,6 @@ class Chip8App : Application() {
                 }
                 if (chip8.registers.soundTimer == 0.toByte()) {
                     chip8.soundCard.soundEnabled = false
-                    println("Done and done")
                 }
             }
         }
