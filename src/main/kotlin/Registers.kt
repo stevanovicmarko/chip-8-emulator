@@ -7,7 +7,7 @@ class Registers {
     private var vi: Byte = 0
     var delayTimer: Byte = 0
     var soundTimer: Byte = 0
-    private var pc = LOAD_PROGRAM_ADDRESS
+    var pc = LOAD_PROGRAM_ADDRESS
     private var sp: Short = -1
     private var stack: Array<Short> = Array(STACK_DEPTH) { 0 }
 

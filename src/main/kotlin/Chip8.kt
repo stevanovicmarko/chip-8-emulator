@@ -1,5 +1,6 @@
 import javafx.scene.canvas.Canvas
 import kotlinx.coroutines.delay
+import java.io.File
 
 val CHAR_SET: Array<UByte> = arrayOf(
     0xF0u,
@@ -93,7 +94,23 @@ class Chip8(canvas: Canvas) {
     val soundCard = SoundCard()
 
     init {
+        val buffer = File((object {}.javaClass.getResource("test_opcode.ch8")?.toURI() ?: error("Invalid path")))
+            .readBytes()
+            .toTypedArray()
+            .map { it.toUByte() }
+            .toTypedArray()
+
+        assert(buffer.size + LOAD_PROGRAM_ADDRESS <= MEMORY_SIZE) {"Not enough memory for ROM"}
+
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
+        buffer.copyInto(memory.memory, LOAD_PROGRAM_ADDRESS)
+        registers.pc = LOAD_PROGRAM_ADDRESS
+
+        println(buffer.contentToString())
+        println(memory.getMemory(0x200))
+        println(memory.getMemory(0x201))
+        println(memory.getMemory(0x202))
+        println(memory.getMemory(0x203))
     }
 
     suspend fun sleep(sleepDuration: Long = TIMER_60_HZ.toLong()) {
