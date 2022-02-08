@@ -202,10 +202,8 @@ class Disassembler {
         val instruction = instructionSet.find {
             (it.mask and opcode) == it.pattern
         } ?: error("Instruction not found")
-        println(instruction)
         val args = instruction.arguments?.map {
             (it.mask and opcode) shr (it.bitsShift ?: 0)
         }
-        println(args)
     }
 }

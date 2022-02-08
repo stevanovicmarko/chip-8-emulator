@@ -86,7 +86,7 @@ val CHAR_SET: Array<UByte> = arrayOf(
 )
 
 class Chip8(canvas: Canvas) {
-    private val memory = Memory()
+    val memory = Memory()
     val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
     val disassembler = Disassembler()
@@ -107,10 +107,6 @@ class Chip8(canvas: Canvas) {
         registers.pc = LOAD_PROGRAM_ADDRESS
 
         println(buffer.contentToString())
-        println(memory.getMemory(0x200))
-        println(memory.getMemory(0x201))
-        println(memory.getMemory(0x202))
-        println(memory.getMemory(0x203))
     }
 
     suspend fun sleep(sleepDuration: Long = TIMER_60_HZ.toLong()) {

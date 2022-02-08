@@ -26,15 +26,8 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.disassembler.disassemble(0xF107)
-        chip8.disassembler.disassemble(0xF10A)
-        chip8.disassembler.disassemble(0xF115)
-        chip8.disassembler.disassemble(0xF118)
-        chip8.disassembler.disassemble(0xF11E)
-        chip8.disassembler.disassemble(0xF129)
-        chip8.disassembler.disassemble(0xF133)
-        chip8.disassembler.disassemble(0xF155)
-        chip8.disassembler.disassemble(0xF165)
+        println(chip8.memory.getOpcode(0x200).toString(16))
+        println(chip8.memory.getOpcode(0x202).toString(16))
 
 
         CoroutineScope(Dispatchers.Main).launch {

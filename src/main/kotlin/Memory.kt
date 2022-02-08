@@ -18,6 +18,12 @@ class Memory(val memory: Array<UByte> = Array(MEMORY_SIZE) { 0u }) {
         return memory[index]
     }
 
+    fun getOpcode(index: Int): UShort {
+        val highByte = getMemory(index)
+        val lowByte = getMemory(index + 1)
+        return (highByte * 256u).toUShort() or lowByte.toUShort()
+    }
+
     private fun assertMemory(index: Int) {
         assert(index in 0 until MEMORY_SIZE) {"Illegal memory access"}
     }
