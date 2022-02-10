@@ -26,8 +26,7 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        println(chip8.memory.getOpcode(0x200).toString(16))
-        println(chip8.memory.getOpcode(0x202).toString(16))
+        chip8.execute(0x310f)
 
 
         CoroutineScope(Dispatchers.Main).launch {

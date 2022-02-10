@@ -89,7 +89,7 @@ class Chip8(canvas: Canvas) {
     val memory = Memory()
     val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
-    val disassembler = Disassembler()
+    private val disassembler = Disassembler()
     val registers = Registers()
     val soundCard = SoundCard()
 
@@ -111,5 +111,12 @@ class Chip8(canvas: Canvas) {
 
     suspend fun sleep(sleepDuration: Long = TIMER_60_HZ.toLong()) {
         delay(sleepDuration)
+    }
+
+    fun execute(opcode: Int) {
+        val (instruction, args) = disassembler.disassemble(opcode)
+        println(instruction)
+        println(args)
+        println(instruction.id)
     }
 }

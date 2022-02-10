@@ -32,13 +32,13 @@ class Disassembler {
             )
         ),
         Instruction(
-            6, "SE_VX_NN", "SE", MASK_HIGHEST_BYTE, 0x3000, listOf(
+            6, "SE_VX_KK", "SE", MASK_HIGHEST_BYTE, 0x3000, listOf(
                 MASK_X,
                 MASK_KK
             )
         ),
         Instruction(
-            7, "SE_VX_NN", "SNE", MASK_HIGHEST_BYTE, 0x4000, listOf(
+            7, "SE_VX_KK", "SNE", MASK_HIGHEST_BYTE, 0x4000, listOf(
                 MASK_X,
                 MASK_KK
             )
@@ -198,12 +198,13 @@ class Disassembler {
         ),
     )
 
-    fun disassemble(opcode: Int) {
+    fun disassemble(opcode: Int): Pair<Instruction, List<Int>?> {
         val instruction = instructionSet.find {
             (it.mask and opcode) == it.pattern
         } ?: error("Instruction not found")
         val args = instruction.arguments?.map {
             (it.mask and opcode) shr (it.bitsShift ?: 0)
         }
+        return Pair(instruction, args)
     }
 }
