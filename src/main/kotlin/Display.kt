@@ -24,16 +24,19 @@ class Display(
     }
 
     fun clearBuffer() {
+        for (i in frameBuffer.indices) {
+            for (j in 0 until frameBuffer[i].size ) {
+                frameBuffer[i][j] = 0.0
+            }
+        }
+
         for (x in 0 until canvas.width.toInt()) {
             for (y in 0 until canvas.height.toInt()) {
-                val color = if (getPixel(x, y) > 0.0) Color.BLACK else Color.BISQUE
+                val color = if (frameBuffer[x][y] > 0.0) Color.BLACK else Color.BISQUE
                 canvas.graphicsContext2D.pixelWriter.setColor(x, y, color)
             }
         }
-    }
-
-    private fun getPixel(x: Int, y: Int): Double {
-        return frameBuffer[x][y]
+        println("buffer cleared")
     }
 
     private fun drawPixel(x: Int, y: Int, color: Color) {
@@ -41,10 +44,6 @@ class Display(
         val pixelSize = scale.toDouble()
         canvas.graphicsContext2D.fillRect(x.toDouble(), y.toDouble(), pixelSize, pixelSize)
     }
-
-//    fun reset() {
-//        frameBuffer.forEachIndexed { index, line -> line[index] = 0.0 }
-//    }
 
     fun drawSprite(height: Int, width: Int, spriteAddress: Int, size: Int) {
         for (lh in 0 until size) {

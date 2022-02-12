@@ -26,7 +26,11 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.execute(0x310f)
+        chip8.registers.stackPush(2)
+        chip8.registers.stackPush(3)
+        chip8.execute(0x00EE)
+        println("pc: ${chip8.registers.pc}")
+        println("sp ${chip8.registers.sp}")
 
 
         CoroutineScope(Dispatchers.Main).launch {

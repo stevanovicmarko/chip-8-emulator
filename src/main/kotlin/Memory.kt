@@ -1,5 +1,5 @@
 const val MEMORY_SIZE = 4095
-const val LOAD_PROGRAM_ADDRESS = 0x200
+const val LOAD_PROGRAM_ADDRESS: Short = 0x200
 const val CHAR_SET_ADDRESS = 0x000
 const val CHAR_SET_WIDTH = 8
 

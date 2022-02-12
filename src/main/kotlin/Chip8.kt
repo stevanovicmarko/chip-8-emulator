@@ -103,7 +103,7 @@ class Chip8(canvas: Canvas) {
         assert(buffer.size + LOAD_PROGRAM_ADDRESS <= MEMORY_SIZE) {"Not enough memory for ROM"}
 
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
-        buffer.copyInto(memory.memory, LOAD_PROGRAM_ADDRESS)
+        buffer.copyInto(memory.memory, LOAD_PROGRAM_ADDRESS.toInt())
         registers.pc = LOAD_PROGRAM_ADDRESS
 
         println(buffer.contentToString())
@@ -118,5 +118,13 @@ class Chip8(canvas: Canvas) {
         println(instruction)
         println(args)
         println(instruction.id)
+
+        when (instruction.id) {
+            InstructionIdentifier.CLS -> display.clearBuffer()
+            InstructionIdentifier.RET -> {
+                registers.pc = registers.stackPop()
+            }
+            else -> {}
+        }
     }
 }

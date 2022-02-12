@@ -8,7 +8,7 @@ class Registers {
     var delayTimer: Byte = 0
     var soundTimer: Byte = 0
     var pc = LOAD_PROGRAM_ADDRESS
-    private var sp: Short = -1
+    var sp: Short = -1
     private var stack: Array<Short> = Array(STACK_DEPTH) { 0 }
 
     fun reset() {
