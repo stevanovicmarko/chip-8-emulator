@@ -89,7 +89,7 @@ class Chip8(canvas: Canvas) {
     val memory = Memory()
     val display = Display(memory, canvas)
     val keyboard = Keyboard(canvas)
-    private val disassembler = Disassembler()
+    val disassembler = Disassembler()
     val registers = Registers()
     val soundCard = SoundCard()
 
@@ -120,9 +120,26 @@ class Chip8(canvas: Canvas) {
         println(instruction.id)
 
         when (instruction.id) {
-            InstructionIdentifier.CLS -> display.clearBuffer()
-            InstructionIdentifier.RET -> {
+            InstructionSet.CLS -> display.clearBuffer()
+            InstructionSet.RET -> {
                 registers.pc = registers.stackPop()
+            }
+            InstructionSet.JP_ADDR -> {
+                registers.pc = args[0]
+            }
+            InstructionSet.CALL_ADDR -> {
+                registers.stackPush(registers.pc)
+                registers.pc = args[0]
+            }
+            InstructionSet.SE_VX_KK -> {
+                if (registers.v[args[0].toInt()] == args[1].toByte()) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
+            }
+            InstructionSet.SNE_VX_KK -> {
+                if (registers.v[args[0].toInt()] != args[1].toByte()) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
             }
             else -> {}
         }

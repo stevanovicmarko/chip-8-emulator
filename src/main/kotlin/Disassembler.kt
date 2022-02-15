@@ -1,9 +1,10 @@
-enum class InstructionIdentifier {
+enum class InstructionSet {
     CLS,
     RET,
     JP_ADDR,
     CALL_ADDR,
     SE_VX_KK,
+    SNE_VX_KK,
     SE_VX_VY,
     LD_VX_KK,
     ADD_VX_KK,
@@ -39,11 +40,11 @@ class Disassembler {
 
     data class Instruction(
         val key: Int,
-        val id: InstructionIdentifier,
+        val id: InstructionSet,
         val name: String,
         val mask: Int,
         val pattern: Int,
-        val arguments: List<InstructionArg>? = null
+        val arguments: List<InstructionArg> = listOf()
     )
 
     private val MASK_NNN = InstructionArg(0x0FFF)
@@ -56,191 +57,191 @@ class Disassembler {
     private val MASK_SECOND_BYTE = 0xF0FF
 
     private val instructionSet = arrayOf(
-        Instruction(2, InstructionIdentifier.CLS, "CLS", 0xFFFF, 0x00E0),
-        Instruction(3, InstructionIdentifier.RET, "RET", 0xFFFF, 0x00EE),
+        Instruction(2, InstructionSet.CLS, "CLS", 0xFFFF, 0x00E0),
+        Instruction(3, InstructionSet.RET, "RET", 0xFFFF, 0x00EE),
         Instruction(
-            4, InstructionIdentifier.JP_ADDR, "JP", MASK_HIGHEST_BYTE, 0x1000, listOf(
+            4, InstructionSet.JP_ADDR, "JP", MASK_HIGHEST_BYTE, 0x1000, listOf(
                 MASK_NNN
             )
         ),
         Instruction(
-            5, InstructionIdentifier.CALL_ADDR, "CALL", MASK_HIGHEST_BYTE, 0x2000, listOf(
+            5, InstructionSet.CALL_ADDR, "CALL", MASK_HIGHEST_BYTE, 0x2000, listOf(
                 MASK_NNN
             )
         ),
         Instruction(
-            6, InstructionIdentifier.SE_VX_KK, "SE", MASK_HIGHEST_BYTE, 0x3000, listOf(
+            6, InstructionSet.SE_VX_KK, "SE", MASK_HIGHEST_BYTE, 0x3000, listOf(
                 MASK_X,
                 MASK_KK
             )
         ),
         Instruction(
-            7, InstructionIdentifier.SE_VX_KK, "SNE", MASK_HIGHEST_BYTE, 0x4000, listOf(
+            7, InstructionSet.SNE_VX_KK, "SNE", MASK_HIGHEST_BYTE, 0x4000, listOf(
                 MASK_X,
                 MASK_KK
             )
         ),
         Instruction(
-            8, InstructionIdentifier.SE_VX_VY, "SE", MASK_HIGHEST_AND_LOWEST_BYTE, 0x5000, listOf(
+            8, InstructionSet.SE_VX_VY, "SE", MASK_HIGHEST_AND_LOWEST_BYTE, 0x5000, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            9, InstructionIdentifier.LD_VX_KK, "LD", MASK_HIGHEST_BYTE, 0x6000, listOf(
+            9, InstructionSet.LD_VX_KK, "LD", MASK_HIGHEST_BYTE, 0x6000, listOf(
                 MASK_X,
                 MASK_KK
             )
         ),
         Instruction(
-            10, InstructionIdentifier.ADD_VX_KK, "ADD", MASK_HIGHEST_BYTE, 0x7000, listOf(
+            10, InstructionSet.ADD_VX_KK, "ADD", MASK_HIGHEST_BYTE, 0x7000, listOf(
                 MASK_X,
                 MASK_KK
             )
         ),
         Instruction(
-            11, InstructionIdentifier.LD_VX_VY, "LD", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8000, listOf(
+            11, InstructionSet.LD_VX_VY, "LD", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8000, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            12, InstructionIdentifier.OR_VX_VY, "OR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8001, listOf(
+            12, InstructionSet.OR_VX_VY, "OR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8001, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            13, InstructionIdentifier.AND_VX_VY, "AND", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8002, listOf(
+            13, InstructionSet.AND_VX_VY, "AND", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8002, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            14, InstructionIdentifier.XOR_VX_VY, "XOR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8003, listOf(
+            14, InstructionSet.XOR_VX_VY, "XOR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8003, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            15, InstructionIdentifier.ADD_VX_VY, "ADD", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8004, listOf(
+            15, InstructionSet.ADD_VX_VY, "ADD", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8004, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            16, InstructionIdentifier.SUB_VX_VY, "SUB", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8005, listOf(
+            16, InstructionSet.SUB_VX_VY, "SUB", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8005, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            17, InstructionIdentifier.SHR_VX_VY, "SHR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8006, listOf(
+            17, InstructionSet.SHR_VX_VY, "SHR", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8006, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            18, InstructionIdentifier.SUBN_VX_VY, "SUBN", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8007, listOf(
+            18, InstructionSet.SUBN_VX_VY, "SUBN", MASK_HIGHEST_AND_LOWEST_BYTE, 0x8007, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            19, InstructionIdentifier.SHL_VX_VY, "SHL", MASK_HIGHEST_AND_LOWEST_BYTE, 0x800E, listOf(
+            19, InstructionSet.SHL_VX_VY, "SHL", MASK_HIGHEST_AND_LOWEST_BYTE, 0x800E, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            20, InstructionIdentifier.SNE_VX_VY, "SNE", MASK_HIGHEST_AND_LOWEST_BYTE, 0x9000, listOf(
+            20, InstructionSet.SNE_VX_VY, "SNE", MASK_HIGHEST_AND_LOWEST_BYTE, 0x9000, listOf(
                 MASK_X,
                 MASK_Y
             )
         ),
         Instruction(
-            21, InstructionIdentifier.LD_I_ADDR, "LD", MASK_HIGHEST_BYTE, 0xA000, listOf(
+            21, InstructionSet.LD_I_ADDR, "LD", MASK_HIGHEST_BYTE, 0xA000, listOf(
                 MASK_NNN
             )
         ),
         Instruction(
-            22, InstructionIdentifier.JP_V0_ADDR, "JP", MASK_HIGHEST_BYTE, 0xB000, listOf(
+            22, InstructionSet.JP_V0_ADDR, "JP", MASK_HIGHEST_BYTE, 0xB000, listOf(
                 MASK_NNN
             )
         ),
         Instruction(
-            23, InstructionIdentifier.RND_VX, "RND", MASK_HIGHEST_BYTE, 0xC000, listOf(
+            23, InstructionSet.RND_VX, "RND", MASK_HIGHEST_BYTE, 0xC000, listOf(
                 MASK_X, MASK_KK
             )
         ),
         Instruction(
-            24, InstructionIdentifier.DRW_VX_VY_N, "DRW", MASK_HIGHEST_BYTE, 0xD000, listOf(
+            24, InstructionSet.DRW_VX_VY_N, "DRW", MASK_HIGHEST_BYTE, 0xD000, listOf(
                 MASK_X, MASK_Y, MASK_N
             )
         ),
         Instruction(
-            25, InstructionIdentifier.SKP_VX, "SKP", MASK_SECOND_BYTE, 0xE09E, listOf(
+            25, InstructionSet.SKP_VX, "SKP", MASK_SECOND_BYTE, 0xE09E, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            26, InstructionIdentifier.SKNP_VX, "SKNP", MASK_SECOND_BYTE, 0xE0A1, listOf(
+            26, InstructionSet.SKNP_VX, "SKNP", MASK_SECOND_BYTE, 0xE0A1, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            27, InstructionIdentifier.LD_VX_DT, "LD", MASK_SECOND_BYTE, 0xF007, listOf(
+            27, InstructionSet.LD_VX_DT, "LD", MASK_SECOND_BYTE, 0xF007, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            28, InstructionIdentifier.LD_VX_K, "LD", MASK_SECOND_BYTE, 0xF00A, listOf(
+            28, InstructionSet.LD_VX_K, "LD", MASK_SECOND_BYTE, 0xF00A, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            29, InstructionIdentifier.LD_DT_VX, "LD", MASK_SECOND_BYTE, 0xF015, listOf(
+            29, InstructionSet.LD_DT_VX, "LD", MASK_SECOND_BYTE, 0xF015, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            30, InstructionIdentifier.LD_ST_VX, "LD", MASK_SECOND_BYTE, 0xF018, listOf(
+            30, InstructionSet.LD_ST_VX, "LD", MASK_SECOND_BYTE, 0xF018, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            31, InstructionIdentifier.ADD_I_VX, "ADD", MASK_SECOND_BYTE, 0xF01E, listOf(
+            31, InstructionSet.ADD_I_VX, "ADD", MASK_SECOND_BYTE, 0xF01E, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            32, InstructionIdentifier.LD_F_VX, "LD", MASK_SECOND_BYTE, 0xF029, listOf(
+            32, InstructionSet.LD_F_VX, "LD", MASK_SECOND_BYTE, 0xF029, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            33, InstructionIdentifier.LD_B_VX, "LD", MASK_SECOND_BYTE, 0xF033, listOf(
+            33, InstructionSet.LD_B_VX, "LD", MASK_SECOND_BYTE, 0xF033, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            34, InstructionIdentifier.LD_I_VX, "LD", MASK_SECOND_BYTE, 0xF055, listOf(
+            34, InstructionSet.LD_I_VX, "LD", MASK_SECOND_BYTE, 0xF055, listOf(
                 MASK_X
             )
         ),
         Instruction(
-            35, InstructionIdentifier.LD_VX_I, "LD", MASK_SECOND_BYTE, 0xF065, listOf(
+            35, InstructionSet.LD_VX_I, "LD", MASK_SECOND_BYTE, 0xF065, listOf(
                 MASK_X
             )
         ),
     )
 
-    fun disassemble(opcode: Int): Pair<Instruction, List<Int>?> {
+    fun disassemble(opcode: Int): Pair<Instruction, List<Short>> {
         val instruction = instructionSet.find {
             (it.mask and opcode) == it.pattern
         } ?: error("Instruction not found")
-        val args = instruction.arguments?.map {
-            (it.mask and opcode) shr (it.bitsShift ?: 0)
+        val args = instruction.arguments.map {
+            ((it.mask and opcode) shr (it.bitsShift ?: 0)).toShort()
         }
         return Pair(instruction, args)
     }
