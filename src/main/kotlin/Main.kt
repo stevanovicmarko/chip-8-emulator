@@ -21,17 +21,18 @@ class Chip8App : Application() {
         chip8.display.drawSprite(10, 28, 15, 5)
 
         chip8.registers.soundTimer = 10
-        chip8.soundCard.soundEnabled = true
+//        chip8.soundCard.soundEnabled = true
 
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
         chip8.registers.pc = 0x006
-        chip8.registers.v[5] = 0b1001u
-        chip8.registers.v[8] = 0b1010u
-        chip8.execute(0x8582)
-        println("v[5] ${chip8.registers.v[5].toString(2)}")
-        println("v[8] ${chip8.registers.v[8].toString(2)}")
+        chip8.registers.v[5] = 0x03u
+        chip8.registers.v[8] = 0x5u
+        chip8.execute(0x885e)
+        println("vy ${chip8.registers.v[5].toString(16)}")
+        println("vx ${chip8.registers.v[8].toString(16)}")
+        println("cf ${chip8.registers.v[0x0f].toString(16)}")
 
 
         CoroutineScope(Dispatchers.Main).launch {
