@@ -3,7 +3,7 @@ const val STACK_DEPTH = 16
 const val TIMER_60_HZ = 1000.0 / 60
 
 class Registers {
-    val v: Array<Byte> = Array(NUMBER_OF_REGISTERS) { 0 }
+    val v: Array<UByte> = Array(NUMBER_OF_REGISTERS) { 0u }
     var i: Byte = 0
     var delayTimer: Byte = 0
     var soundTimer: Byte = 0
@@ -12,7 +12,7 @@ class Registers {
     var stack: Array<Short> = Array(STACK_DEPTH) { 0 }
 
     fun reset() {
-        v.fill(0)
+        v.fill(0u)
         i = 0
         delayTimer = 0
         soundTimer = 0

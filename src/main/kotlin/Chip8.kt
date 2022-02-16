@@ -132,14 +132,39 @@ class Chip8(canvas: Canvas) {
                 registers.pc = args[0]
             }
             InstructionSet.SE_VX_KK -> {
-                if (registers.v[args[0].toInt()] == args[1].toByte()) {
+                if (registers.v[args[0].toInt()] == args[1].toUByte()) {
                     registers.pc = (registers.pc + 2).toShort()
                 }
             }
             InstructionSet.SNE_VX_KK -> {
-                if (registers.v[args[0].toInt()] != args[1].toByte()) {
+                if (registers.v[args[0].toInt()] != args[1].toUByte()) {
                     registers.pc = (registers.pc + 2).toShort()
                 }
+            }
+            InstructionSet.SE_VX_VY -> {
+                if (registers.v[args[0].toInt()] == registers.v[args[1].toInt()]) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
+            }
+            InstructionSet.LD_VX_KK -> {
+                registers.v[args[0].toInt()] = args[1].toUByte()
+            }
+            InstructionSet.ADD_VX_KK -> {
+                val index = args[0].toInt()
+                registers.v[index] = (registers.v[index] + args[1].toUByte()).toUByte()
+            }
+            InstructionSet.LD_VX_VY -> {
+                registers.v[args[0].toInt()] = registers.v[args[1].toInt()]
+            }
+            InstructionSet.OR_VX_VY -> {
+                val xIndex = args[0].toInt()
+                val yIndex = args[1].toInt()
+                registers.v[xIndex] = registers.v[xIndex] or registers.v[yIndex]
+            }
+            InstructionSet.AND_VX_VY -> {
+                val xIndex = args[0].toInt()
+                val yIndex = args[1].toInt()
+                registers.v[xIndex] = registers.v[xIndex] and registers.v[yIndex]
             }
             else -> {}
         }

@@ -27,10 +27,11 @@ class Chip8App : Application() {
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
         chip8.registers.pc = 0x006
-        chip8.registers.v[0] = 0x01
-        chip8.registers.v[1] = 0x02
-        chip8.execute(0x4002)
-        println("pc ${chip8.registers.pc }")
+        chip8.registers.v[5] = 0b1001u
+        chip8.registers.v[8] = 0b1010u
+        chip8.execute(0x8582)
+        println("v[5] ${chip8.registers.v[5].toString(2)}")
+        println("v[8] ${chip8.registers.v[8].toString(2)}")
 
 
         CoroutineScope(Dispatchers.Main).launch {
