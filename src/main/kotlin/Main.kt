@@ -28,11 +28,13 @@ class Chip8App : Application() {
         stage.show()
         chip8.registers.pc = 0x006
         chip8.registers.v[5] = 0x03u
-        chip8.registers.v[8] = 0x5u
-        chip8.execute(0x885e)
+        chip8.registers.v[8] = 0x03u
+        chip8.execute(0xaFFF)
         println("vy ${chip8.registers.v[5].toString(16)}")
         println("vx ${chip8.registers.v[8].toString(16)}")
         println("cf ${chip8.registers.v[0x0f].toString(16)}")
+        println("pc ${chip8.registers.pc.toString(16)}")
+        println("i ${chip8.registers.i.toString(16)}")
 
 
         CoroutineScope(Dispatchers.Main).launch {

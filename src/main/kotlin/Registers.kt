@@ -4,7 +4,7 @@ const val TIMER_60_HZ = 1000.0 / 60
 
 class Registers {
     val v: Array<UByte> = Array(NUMBER_OF_REGISTERS) { 0u }
-    var i: Byte = 0
+    var i: UShort = 0u
     var delayTimer: Byte = 0
     var soundTimer: Byte = 0
     var pc = LOAD_PROGRAM_ADDRESS
@@ -13,7 +13,7 @@ class Registers {
 
     fun reset() {
         v.fill(0u)
-        i = 0
+        i = 0u
         delayTimer = 0
         soundTimer = 0
         pc = LOAD_PROGRAM_ADDRESS

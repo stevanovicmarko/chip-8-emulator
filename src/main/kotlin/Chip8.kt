@@ -157,24 +157,24 @@ class Chip8(canvas: Canvas) {
                 registers.v[args[0].toInt()] = registers.v[args[1].toInt()]
             }
             InstructionSet.OR_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[xIndex] = registers.v[xIndex] or registers.v[yIndex]
             }
             InstructionSet.AND_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[xIndex] = registers.v[xIndex] and registers.v[yIndex]
             }
             InstructionSet.XOR_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[xIndex] = registers.v[xIndex] xor registers.v[yIndex]
             }
             InstructionSet.ADD_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[0x0f] = if (registers.v[xIndex] + registers.v[yIndex] > 0xffu) 1u else 0u
                 registers.v[xIndex] = (registers.v[xIndex] + registers.v[yIndex]).toUByte()
             }
             InstructionSet.SUB_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[0x0f] = if (registers.v[xIndex] > registers.v[yIndex]) 1u else 0u
                 registers.v[xIndex] = (registers.v[xIndex] - registers.v[yIndex]).toUByte()
             }
@@ -184,20 +184,29 @@ class Chip8(canvas: Canvas) {
                 registers.v[xIndex] = (registers.v[xIndex].toInt() shr 1).toUByte()
             }
             InstructionSet.SUBN_VX_VY -> {
-                val (xIndex, yIndex) = extractXandYindices(args)
+                val (xIndex, yIndex) = extractIndices(args)
                 registers.v[0x0f] = if (registers.v[yIndex] > registers.v[xIndex]) 1u else 0u
                 registers.v[xIndex] = (registers.v[yIndex] - registers.v[xIndex]).toUByte()
             }
             InstructionSet.SHL_VX_VY -> {
-                val (xIndex) = extractXandYindices(args)
+                val (xIndex) = extractIndices(args)
                 registers.v[0x0f] = if ((registers.v[xIndex] and 0x80u) != 0u.toUByte()) 1u else 0u
                 registers.v[xIndex] = (registers.v[xIndex].toInt() shl 1).toUByte()
+            }
+            InstructionSet.SNE_VX_VY -> {
+                val (xIndex, yIndex) = extractIndices(args)
+                if (registers.v[xIndex] != registers.v[yIndex]) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
+            }
+            InstructionSet.LD_I_ADDR -> {
+                registers.i = args[0].toUShort()
             }
             else -> {}
         }
     }
 
-    private fun extractXandYindices(args: List<Short>): Pair<Int, Int> {
+    private fun extractIndices(args: List<Short>): Pair<Int, Int> {
         val xIndex = args[0].toInt()
         val yIndex = args[1].toInt()
         return Pair(xIndex, yIndex)
