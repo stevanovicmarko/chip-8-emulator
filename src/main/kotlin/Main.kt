@@ -11,14 +11,10 @@ import kotlinx.coroutines.launch
 class Chip8App : Application() {
 
     override fun start(stage: Stage) {
-        val canvas = Canvas(600.0, 400.0)
+        val canvas = Canvas(640.0, 320.0)
         val chip8 = Chip8(canvas)
 
         chip8.display.clearBuffer()
-        chip8.display.drawSprite(10, 1, 0, 5)
-        chip8.display.drawSprite(10, 10, 5, 5)
-        chip8.display.drawSprite(10, 19, 10, 5)
-        chip8.display.drawSprite(10, 28, 15, 5)
 
         chip8.registers.soundTimer = 10
 //        chip8.soundCard.soundEnabled = true
@@ -26,15 +22,20 @@ class Chip8App : Application() {
         stage.title = "8-Chip"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
-        chip8.registers.pc = 0x006
-        chip8.registers.v[5] = 0x03u
+        chip8.registers.pc = 0x010
+        chip8.registers.i = 0x0au
+        chip8.registers.v[0] = 0u
+        chip8.registers.v[5] = 0u
         chip8.registers.v[8] = 0x03u
-        chip8.execute(0xaFFF)
-        println("vy ${chip8.registers.v[5].toString(16)}")
-        println("vx ${chip8.registers.v[8].toString(16)}")
-        println("cf ${chip8.registers.v[0x0f].toString(16)}")
-        println("pc ${chip8.registers.pc.toString(16)}")
-        println("i ${chip8.registers.i.toString(16)}")
+        chip8.execute(0xd505)
+
+        chip8.registers.i = 0x00u
+        chip8.registers.v[0] = 3u
+        chip8.registers.v[5] = 3u
+        chip8.registers.v[8] = 0x03u
+        chip8.execute(0xd505)
+
+        println("vf ${chip8.registers.v[0x0f].toString(16)}")
 
 
         CoroutineScope(Dispatchers.Main).launch {

@@ -10,55 +10,63 @@ class Display(
     private val canvas: Canvas
 ) {
     private val scale = (canvas.width / DISPLAY_WIDTH).toInt()
-    private val frameBuffer: Array<Array<Double>> = Array(canvas.width.toInt()) {
-        Array(canvas.height.toInt()) { 0.0 }
+    private val frameBuffer: Array<Array<Double>> = Array(DISPLAY_HEIGHT) {
+        Array(DISPLAY_WIDTH) { 0.0 }
     }
 
     init {
         canvas.isFocusTraversable = true
-        for (i in 0 until DISPLAY_WIDTH * scale) {
-            for (j in 0 until DISPLAY_HEIGHT * scale) {
-                frameBuffer[i][j] = 0.0
+        for (h in 0 until DISPLAY_HEIGHT) {
+            for (w in 0 until DISPLAY_WIDTH) {
+                canvas.graphicsContext2D.fill = Color.BEIGE
+                canvas.graphicsContext2D.fillRect(w.toDouble() * scale, h.toDouble() * scale, 10.0, 10.0)
             }
         }
+        clearBuffer()
     }
 
     fun clearBuffer() {
-        for (i in frameBuffer.indices) {
-            for (j in 0 until frameBuffer[i].size ) {
-                frameBuffer[i][j] = 0.0
-            }
-        }
-
-        for (x in 0 until canvas.width.toInt()) {
-            for (y in 0 until canvas.height.toInt()) {
-                val color = if (frameBuffer[x][y] > 0.0) Color.BLACK else Color.BISQUE
-                canvas.graphicsContext2D.pixelWriter.setColor(x, y, color)
-            }
+        for (column in frameBuffer) {
+            column.fill(0.0)
         }
         println("buffer cleared")
     }
 
-    private fun drawPixel(x: Int, y: Int, color: Color) {
-        canvas.graphicsContext2D.fill = color
-        val pixelSize = scale.toDouble()
-        canvas.graphicsContext2D.fillRect(x.toDouble(), y.toDouble(), pixelSize, pixelSize)
+    private fun drawBuffer() {
+        for(h in 0 until DISPLAY_HEIGHT) {
+            for (w in 0 until  DISPLAY_WIDTH) {
+                drawPixel(h * scale, w * scale, frameBuffer[h][w])
+            }
+        }
     }
 
-    fun drawSprite(height: Int, width: Int, spriteAddress: Int, size: Int) {
+    private fun drawPixel(x: Int, y: Int, value: Double) {
+        canvas.graphicsContext2D.fill = if (value > 0.0) Color.GREEN else Color.BLACK
+        val pixelSize = scale.toDouble()
+        canvas.graphicsContext2D.fillRect(y.toDouble(), x.toDouble(), pixelSize, pixelSize)
+    }
+
+    fun drawSprite(height: Int, width: Int, spriteAddress: Int, size: Int): UByte {
+        var pixelCollision: UByte = 0u
+
         for (lh in 0 until size) {
             val line = memory.memory[spriteAddress + lh]
             for (lw in 0 until CHAR_SET_WIDTH) {
                 val bitToCheck = (0b10000000 shr lw).toUByte()
-                val value = line and bitToCheck
-                val color = if (value != 0u.toUByte()) {
-                    Color.GREEN
-                } else {
-                    Color.BLACK
+                if ((line and bitToCheck) == 0u.toUByte()) {
+                    continue
                 }
-                drawPixel((width + lw) * scale, (height + lh) * scale, color)
+                val ph = (height + lh) % DISPLAY_HEIGHT
+                val pw = (width + lw) % DISPLAY_WIDTH
+                if (frameBuffer[ph][pw] >= 1.0) {
+                    pixelCollision = 1u
+                }
+
+                frameBuffer[ph][pw] = ((frameBuffer[ph][pw]).toInt() xor 1).toDouble()
             }
         }
+        drawBuffer()
+        return pixelCollision
     }
 
 }
