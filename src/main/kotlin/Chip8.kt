@@ -107,19 +107,20 @@ class Chip8(canvas: Canvas) {
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
         buffer.copyInto(memory.memory, LOAD_PROGRAM_ADDRESS.toInt())
         registers.pc = LOAD_PROGRAM_ADDRESS
-
-        println(buffer.contentToString())
     }
 
     suspend fun sleep(sleepDuration: Long = TIMER_60_HZ.toLong()) {
         delay(sleepDuration)
     }
 
-    suspend fun execute(opcode: Int) {
+    suspend fun cycle() {
+        val opcode = (memory.memory[registers.pc.toInt()] * 256u + memory.memory[registers.pc.toInt() + 1]).toInt()
+        execute(opcode)
+        registers.pc = (registers.pc + 2).toShort()
+    }
+
+    private suspend fun execute(opcode: Int) {
         val (instruction, args) = disassembler.disassemble(opcode)
-        println(instruction)
-        println(args)
-        println(instruction.id)
 
         when (instruction.id) {
             InstructionSet.CLS -> display.clearBuffer()

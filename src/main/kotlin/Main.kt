@@ -26,6 +26,7 @@ class Chip8App : Application() {
         CoroutineScope(Dispatchers.Main).launch {
             while (true) {
                 chip8.sleep(200)
+                chip8.cycle()
                 if (chip8.registers.delayTimer > 0u) {
                     chip8.sleep()
                     chip8.registers.delayTimer--

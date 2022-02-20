@@ -16,6 +16,7 @@ class Display(
 
     init {
         canvas.isFocusTraversable = true
+        // clear with BEIGE for debug purposes
         for (h in 0 until DISPLAY_HEIGHT) {
             for (w in 0 until DISPLAY_WIDTH) {
                 canvas.graphicsContext2D.fill = Color.BEIGE
@@ -29,7 +30,6 @@ class Display(
         for (column in frameBuffer) {
             column.fill(0.0)
         }
-        println("buffer cleared")
     }
 
     private fun drawBuffer() {
@@ -49,6 +49,7 @@ class Display(
     fun drawSprite(height: Int, width: Int, spriteAddress: Int, size: Int): UByte {
         var pixelCollision: UByte = 0u
 
+        println("$height, $width, $spriteAddress")
         for (lh in 0 until size) {
             val line = memory.memory[spriteAddress + lh]
             for (lw in 0 until CHAR_SET_WIDTH) {
