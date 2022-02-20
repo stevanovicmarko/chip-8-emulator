@@ -3,7 +3,7 @@ import javafx.scene.paint.Color
 
 const val DISPLAY_WIDTH = 64
 const val DISPLAY_HEIGHT = 32
-
+const val SPRITE_HEIGHT = 5u
 
 class Display(
     private val memory: Memory,

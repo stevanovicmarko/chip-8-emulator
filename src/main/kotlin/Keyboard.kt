@@ -26,11 +26,7 @@ data class Keyboard(val source: Node) {
         }
     }
 
-    fun hasKeyDown(): Boolean {
-        return emulatedKeys.any { it }
-    }
+    fun hasKeyDown(): Int = emulatedKeys.indexOfFirst { it }
 
-    fun isKeyDown(index: Int): Boolean {
-        return emulatedKeys[index]
-    }
+    fun isKeyDown(index: Int): Boolean = emulatedKeys[index]
 }

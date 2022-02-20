@@ -102,7 +102,7 @@ class Chip8(canvas: Canvas) {
             .map { it.toUByte() }
             .toTypedArray()
 
-        assert(buffer.size + LOAD_PROGRAM_ADDRESS <= MEMORY_SIZE) {"Not enough memory for ROM"}
+        assert(buffer.size + LOAD_PROGRAM_ADDRESS <= MEMORY_SIZE) { "Not enough memory for ROM" }
 
         CHAR_SET.copyInto(memory.memory, CHAR_SET_ADDRESS)
         buffer.copyInto(memory.memory, LOAD_PROGRAM_ADDRESS.toInt())
@@ -115,7 +115,7 @@ class Chip8(canvas: Canvas) {
         delay(sleepDuration)
     }
 
-    fun execute(opcode: Int) {
+    suspend fun execute(opcode: Int) {
         val (instruction, args) = disassembler.disassemble(opcode)
         println(instruction)
         println(args)
@@ -213,15 +213,76 @@ class Chip8(canvas: Canvas) {
                 registers.v[xIndex] = (random and args[1].toInt()).toUByte()
             }
             InstructionSet.DRW_VX_VY_N -> {
-                val (xIndex, yIndex) = extractIndices(args[0], args[1])
+                val (xIndex, yIndex, size) = extractIndices(args[0], args[1], args[2])
                 registers.v[0x0f] = display.drawSprite(
                     registers.v[xIndex].toInt(),
                     registers.v[yIndex].toInt(),
                     registers.i.toInt(),
-                    args[2].toInt()
+                    size
                 )
             }
-            else -> {}
+            InstructionSet.SKP_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                if (keyboard.isKeyDown(registers.v[xIndex].toInt())) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
+            }
+            InstructionSet.SKNP_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                if (!keyboard.isKeyDown(registers.v[xIndex].toInt())) {
+                    registers.pc = (registers.pc + 2).toShort()
+                }
+            }
+            InstructionSet.LD_VX_DT -> {
+                val (xIndex) = extractIndices(args[0])
+                registers.v[xIndex] = registers.delayTimer
+            }
+            InstructionSet.LD_VX_K -> {
+                var keyPressed = keyboard.hasKeyDown()
+                while (keyPressed == -1) {
+                    keyPressed = keyboard.hasKeyDown()
+                    sleep(100)
+                }
+                val (xIndex) = extractIndices(args[0])
+                registers.v[xIndex] = keyPressed.toUByte()
+            }
+            InstructionSet.LD_DT_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                registers.delayTimer = registers.v[xIndex]
+            }
+            InstructionSet.LD_ST_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                registers.soundTimer = registers.v[xIndex]
+            }
+            InstructionSet.ADD_I_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                registers.i = (registers.i + registers.v[xIndex]).toUShort()
+            }
+            InstructionSet.LD_F_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                registers.i = (registers.v[xIndex] * SPRITE_HEIGHT).toUShort()
+            }
+            InstructionSet.LD_B_VX -> {
+                val (xIndex) = extractIndices(args[0])
+                var x = registers.v[xIndex].toDouble()
+                val hundreds = floor(x / 100.0)
+                x -= hundreds * 100.0
+                val tens = floor(x / 10.0)
+                val ones = x - tens * 10.0
+                memory.memory[registers.i.toInt()] = hundreds.toInt().toUByte()
+                memory.memory[registers.i.toInt() + 1] = tens.toInt().toUByte()
+                memory.memory[registers.i.toInt() + 2] = ones.toInt().toUByte()
+            }
+            InstructionSet.LD_I_VX -> {
+                for (i in 0..args[0].toInt()) {
+                    memory.memory[registers.i.toInt() + i] = registers.v[i]
+                }
+            }
+            InstructionSet.LD_VX_I -> {
+                for (i in 0..args[0].toInt()) {
+                    registers.v[i] = memory.memory[registers.i.toInt() + i]
+                }
+            }
         }
     }
 
