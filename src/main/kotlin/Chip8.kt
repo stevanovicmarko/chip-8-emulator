@@ -115,8 +115,8 @@ class Chip8(canvas: Canvas) {
 
     suspend fun cycle() {
         val opcode = (memory.memory[registers.pc.toInt()] * 256u + memory.memory[registers.pc.toInt() + 1]).toInt()
-        execute(opcode)
         registers.pc = (registers.pc + 2).toShort()
+        execute(opcode)
     }
 
     private suspend fun execute(opcode: Int) {
@@ -216,8 +216,8 @@ class Chip8(canvas: Canvas) {
             InstructionSet.DRW_VX_VY_N -> {
                 val (xIndex, yIndex, size) = extractIndices(args[0], args[1], args[2])
                 registers.v[0x0f] = display.drawSprite(
-                    registers.v[xIndex].toInt(),
                     registers.v[yIndex].toInt(),
+                    registers.v[xIndex].toInt(),
                     registers.i.toInt(),
                     size
                 )

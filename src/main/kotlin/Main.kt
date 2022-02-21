@@ -17,9 +17,11 @@ class Chip8App : Application() {
         chip8.display.clearBuffer()
 
         chip8.registers.soundTimer = 10u
-//        chip8.soundCard.soundEnabled = true
 
-        stage.title = "8-Chip"
+        // Disable annoying beeper
+        // chip8.soundCard.soundEnabled = true
+
+        stage.title = "Chip-8 Emulator"
         stage.scene = Scene(StackPane(canvas), 800.0, 800.0)
         stage.show()
 

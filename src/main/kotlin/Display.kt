@@ -49,7 +49,6 @@ class Display(
     fun drawSprite(height: Int, width: Int, spriteAddress: Int, size: Int): UByte {
         var pixelCollision: UByte = 0u
 
-        println("$height, $width, $spriteAddress")
         for (lh in 0 until size) {
             val line = memory.memory[spriteAddress + lh]
             for (lw in 0 until CHAR_SET_WIDTH) {
